@@ -2,43 +2,47 @@
 import os
 import csv
 
-# join
+# join file. Thank you Dan for showing me how to do this.
 file = os.path.join('Resources','budget_data.csv')
 
-# open file
+# open file. Using the delimiter to handle commas in the file.
 with open(file, newline = '') as csvfile:
     csvreader = csv.reader(csvfile,delimiter=",")
     header = next(csvreader)
-
-    date_lst = []
-    amount_lst = []
-    profit_dic = {}
+# Dan thank you for helping me distinguish between square brackets for a list and curly brackets for a dictionary
+# Empty arrays, will populate once for loop is cycled through
+    date_list = []
+    dollar_list = []
+    netprofit_dic = {}
 
     for row in csvreader:
-        date_lst.append(row[0])
-        amount_lst.append(int(row[1]))
-    
-    for i in range(1,len(amount_lst)):
-        if date_lst[i] not in profit_dic.keys():
-            profit_dic[date_lst[i]] = amount_lst[i] - amount_lst[i-1]
-    #max date    
-    max_date = max(profit_dic, key = profit_dic.get)
-    #Find the min value in the dictionary
-    min_date = min(profit_dic, key = profit_dic.get)
-    num_date = len(date_lst)
-    total = sum(amount_lst)
-    avg_change = round(sum(profit_dic.values())/(num_date - 1),2)
+        date_list.append(row[0])
+        dollar_list.append(int(row[1]))
+        
+    # Dan thank you for showing me how to cycle through a for loop backwards, -1 
+    for j in range(1,len(dollar_list)):
+        if date_list[j] not in netprofit_dic.keys():
+            netprofit_dic[date_list[i]] = dollar_list[j] - dollar_list[j-1]
+    #max date, using key, get and a dictionary, thank you Dan    
+    maxiumum_date = max(netprofit_dic, key = netprofit_dic.get)
+    #min date, using key, get and a dictionary, thank you Dan 
+    minimum_date = min(netprofit_dic, key = netprofit_dic.get)
+    # Dan thank you for showing me how to use the Sum and round functions
+    number_date = len(date_list)
+    total_list = sum(dollar_list)
+    change_list = round(sum(netprofit_dic.values())/(num_date - 1),2)
 
-    txt_file = open("Summary Table.txt","w")
+    text_file = open("Summary Table.txt","w")
 
-    txt_file.writelines(f"Financial Analysis\n---------------------\n")
-    txt_file.writelines(f"Total Months: {num_date}\nTotal: ${total}\nAverage Change: ${avg_change}\n")
-    txt_file.writelines(f"Greatest Increase in Profits: {max_date} (${profit_dic[max_date]})\n")
-    txt_file.writelines(f"Greatest Decrease in Profits: {min_date} (${profit_dic[min_date]})")
-    txt_file.close()
+    # Dan thank you for showing me how to writelines. Creating custom functions using appended lists and using computations
+    text_file.writelines(f"Financial Analysis\n******************\n")
+    text_file.writelines(f"Total Months: {number_date}\nTotal: ${total_list}\nAverage Change: ${change_list}\n")
+    text_file.writelines(f"Largest Increase in Profits: {maximum_date} (${netprofit_dic[maximum_date]})\n")
+    text_file.writelines(f"Largest Decrease in Profits: {minimum_date} (${netprofit_dic[minimum_date]})")
+    text_file.close()
 
 # print results
-    print(f"Financial Analysis\n---------------------")
-    print(f"Total Months: {num_date}\nTotal: ${total}\nAverage Change: ${avg_change}")
-    print(f"Greatest Increase in Profits: {max_date} (${profit_dic[max_date]})")
-    print(f"Greatest Decrease in Profits: {min_date} (${profit_dic[min_date]})")
+    print(f"Financial Analysis\n**************************")
+    print(f"Total Months: {number_date}\nTotal: ${total_list}\nAverage Change: ${change_list}")
+    print(f"Largest Increase in Profits: {max_date} (${netprofit_dic[max_date]})")
+    print(f"Largest Decrease in Profits: {min_date} (${netprofit_dic[min_date]})")
